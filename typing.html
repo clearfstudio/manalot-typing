@@ -5,388 +5,591 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>タイピングチャレンジ</title>
     <style>
-        body {
-            text-align: center;
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-        }
-        .word, .romaji, #result, #questionCounter {
-            font-size: 20px;
-            margin: 10px 0;
-            display: none;
-        }
-        .romaji span {
-            letter-spacing: 5px;
-        }
-        .correct {
-            color: green;
-        }
-        #gradeButtons {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            justify-content: center;
-            max-width: 140px;
-            margin: auto;
-        }
-        #gradeButtons button {
-            width: 140px;
-            height: 45px;
-            font-size: 18px;
-            text-align: center;
-            border: 2px solid black;
-            background-color: #ffffff;
-            color: black;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s ease-in-out;
-        }
+    body {
+      text-align: center;
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+    }
+    .word, .romaji, #result, #questionCounter {
+      font-size: 20px;
+      margin: 10px 0;
+      display: none;
+    }
+    .romaji span {
+      letter-spacing: 5px;
+    }
+    .correct {
+      color: #007bff;
+    }
+    #waittime {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: auto;
+      text-align: center;
+      width: 500px;
+      height: 110px;
+      font-size: 18px;
+      border: 2px solid black;
+    }
 
-        #gradeButtons button:hover {
-            background-color: #007bff;
-            color: white;
-            border-color: #0056b3;
-        }
+    #gradeButtons {
+      display: none;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      justify-content: center;
+      max-width: 140px;
+      margin: auto;
+      margin-bottom: 20px;
+    }
+    #gradeButtons button {
+      width: 140px;
+      height: 45px;
+      font-size: 18px;
+      text-align: center;
+      border: 2px solid black;
+      background-color: #6ec6ff;
+      color: black;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+    }
 
-        #romajiDisplay {
-            height: 70px;
-            font-size: 18px;
-            word-break: break-word;
-            white-space: normal;
-            max-width: 100%;
-            display: none;
-        }
-        #wordContainer {
-            background-color: #ffffff;
-            height: 145px;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-        }
-        #scoreDisplay {
-            font-size: 30px;
-            background-color: #ffffff;
-            height: 140px;
-            display: none;
-            justify-content: center;
-            text-align: center;
-            align-items: center;
-            border: 3px solid black;
-            font-weight: bold;
-        }
-        #seisekiDisplay {
-            font-size: 18px;
-            background-color: #ffffff;
-            height: 350px;
-            display: none;
-            justify-content: center;
-            text-align: center;
-            align-items: center;
-            border: 3px solid black;
-            flex-direction: column;
-        }
-        #seisekiContent {
-            width: 520px;
-            margin: 0 auto;
-            text-align: left;
-        }
-        #seisekiContent table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        #seisekiContent td {
-            padding: 5px 10px;
-        }
-        .seisekiTitle {
-            font-size: 25px;
-            font-weight: bold;
-            text-decoration: underline;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-        .rankTable {
-            margin: 0 auto;
-            border-collapse: collapse;
-        }
+    #gradeButtons button:hover {
+      background-color: #007bff;
+      color: white;
+      border-color: #0056b3;
+    }
 
-        .rankCell {
-            padding: 10px;
-            text-align: left;
-            vertical-align: middle;
-        }
+    #romajiDisplay {
+      height: 70px;
+      font-size: 18px;
+      word-break: break-word;
+      white-space: normal;
+      max-width: 100%;
+      display: none;
+    }
+    #wordContainer {
+      background-color: #ffffff;
+      height: 145px;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    #scoreDisplay {
+      font-size: 30px;
+      background-color: #ffffff;
+      height: 140px;
+      display: none;
+      justify-content: center;
+      text-align: center;
+      align-items: center;
+      border: 3px solid black;
+      font-weight: bold;
+    }
+    #seisekiDisplay {
+      font-size: 18px;
+      background-color: #ffffff;
+      height: 350px;
+      display: none;
+      justify-content: center;
+      text-align: center;
+      align-items: center;
+      border: 3px solid black;
+      flex-direction: column;
+    }
+    #seisekiContent {
+      width: 520px;
+      margin: 0 auto;
+      text-align: left;
+    }
+    #seisekiContent table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    #seisekiContent td {
+      padding: 5px 10px;
+    }
 
-        .rankCell img {
-            width: auto;
-            height: 100px;
-        }
-        .scoreTable .alignRight {
-            text-align: right !important;
-        }
+    .seisekiTitle {
+      font-size: 26px;
+      font-weight: bold;
+      color: black;
+      width: 480px;
+      background-color: #f8f9fa;
+      padding: 10px 20px;
+      display: inline-block;
+      margin-bottom: 20px;
+      text-align: center;
+      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    }
 
-        #kanjiDisplay {
-            font-size: 25px;
-            font-weight: bold;
-            color: black;
-            height: 85px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-        }
-        #hiraganaDisplay {
-            font-size: 20px;
-            color: black;
-            height: 60px;
-            display: flex;
-            align-items: flex-start;
-            justify-content: center;
-            text-align: center;
-        }
+    .rankTable {
+      margin: 0 auto;
+      border-collapse: collapse;
+    }
 
-        #keyboard {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            gap: 5px;
-            margin-top: 5px;
-        }
+    .rankCell {
+      padding: 10px;
+      text-align: left;
+      vertical-align: middle;
+    }
 
-        #keyboard .row {
-            display: flex;
-            gap: 5px;
-        }
+    .rankCell img {
+      width: auto;
+      height: 100px;
+    }
+    .scoreTable .alignRight {
+      text-align: right !important;
+    }
 
-        #keyboard .key {
-            width: 28px;
-            height: 28px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 13px;
-            font-weight: bold;
-            border: 1px solid black;
-            border-radius: 3px;
-            background-color: white;
-            box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
-            transition: background-color 0.2s, transform 0.1s;
-        }
+    #kanjiDisplay {
+      font-size: 25px;
+      font-weight: bold;
+      color: black;
+      height: 85px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    #hiraganaDisplay {
+      font-size: 20px;
+      color: black;
+      height: 60px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      text-align: center;
+    }
 
-        #keyboard .key.home {
-            border: 1px solid red;
-        }
+    #keyboard {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      margin-top: 5px;
+    }
 
-        #keyboard .key.active {
-            background-color: #ff5722;
-            transform: scale(1.1);
-        }
+    #keyboard .row {
+      display: flex;
+      gap: 5px;
+    }
 
-        #keyboard .row:nth-child(2) {
-            margin-left: 25px;
-        }
-        #keyboard .row:nth-child(3) {
-            margin-left: 40px;
-        }
-        #keyboard .row:nth-child(4) {
-            margin-left: 60px;
-        }
-        #handsContainer {
-            display: none;
-            justify-content: space-around;
-            width: 350px;
-            height: 60px;
-            margin-top: -0;
-            margin-left: 130px;
-        }
+    #keyboard .key {
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      font-weight: bold;
+      border: 1px solid black;
+      border-radius: 3px;
+      background-color: white;
+      box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+      transition: background-color 0.2s, transform 0.1s;
+    }
 
+    #keyboard .key.home {
+      border: 1px solid red;
+    }
 
-        .finger {
-            fill: lightgray;
-            stroke: black;
-            stroke-width: 2;
-            transition: fill 0.2s;
-        }
+    #keyboard .key.active {
+      background-color: #ff5722;
+      transform: scale(1.1);
+    }
 
-        .finger.active {
-            fill: #ff5722;
-        }
-        #topimage {
-            width: 340px;
-            display: block;
-            margin: auto;
-        }
-        #startimage {
-            width: 450px;
-            display: none;
-            margin: auto;
-        }
-        #gradeDisplay {
-            display: none;
-            width: 100px;
-            height: 30px;
-            background-color: #696969;
-            color: #fff;
-            text-align: center;
-            font-size: 18px;
-            font-weight: bold;
-            align-items: center;
-            justify-content: center;
-            position: fixed;
-            bottom: 10px;
-            left: 0px;
-            z-index: 999;
-        }
-        #resetButton {
-            display: none;
-            width: 120px;
-            height: 30px;
-            background-color: #696969;
-            color: white;
-            text-align: center;
-            font-size: 12px;
-            font-weight: bold;
-            line-height: 40px;
-            border-radius: 10px;
-            position: fixed;
-            bottom: 10px;
-            right: 5px;
-            cursor: pointer;
-            align-items: center;
-            justify-content: center;
-            transition: background-color 0.3s;
-        }
+    #keyboard .row:nth-child(2) {
+      margin-left: 25px;
+    }
+    #keyboard .row:nth-child(3) {
+      margin-left: 40px;
+    }
+    #keyboard .row:nth-child(4) {
+      margin-left: 60px;
+    }
+    #handsContainer {
+      display: block;
+      justify-content: space-around;
+      width: 400px;
+      height: 60px;
+      margin-top: -0;
+      margin-left: 130px;
+    }
+    .finger {
+      fill: lightgray;
+      stroke: black;
+      stroke-width: 2;
+      transition: fill 0.2s;
+    }
 
-        #resetButton:hover {
-            background-color: #505050;
-        }
+    .finger.active {
+      fill: #ff5722;
+    }
 
+    #startimage {
+      width: 450px;
+      display: none;
+      margin: auto;
+    }
+    #gradeDisplay {
+      display: none;
+      width: 100px;
+      height: 30px;
+      background-color: #696969;
+      color: #fff;
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+      align-items: center;
+      justify-content: center;
+      position: fixed;
+      bottom: 10px;
+      left: 0px;
+      z-index: 999;
+    }
+    #modeDisplay {
+      display: none;
+      width: 100px;
+      height: 30px;
+      background-color: #696969;
+      color: #fff;
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+      align-items: center;
+      justify-content: center;
+      position: fixed;
+      bottom: 48px;
+      left: 0px;
+      z-index: 999;
+    }
+    #resetButton {
+      display: none;
+      width: 120px;
+      height: 30px;
+      background-color: #696969;
+      color: white;
+      text-align: center;
+      font-size: 12px;
+      font-weight: bold;
+      line-height: 40px;
+      border-radius: 10px;
+      position: fixed;
+      bottom: 10px;
+      right: 5px;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.3s;
+    }
 
+    #resetButton:hover {
+      background-color: #505050;
+    }
+
+    .fixed-image-container {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      display: flex;
+      align-items: flex-end;
+      z-index: 1000;
+    }
+
+    .speech-bubble {
+      position: relative;
+      background: #ffffff;
+      border: 2px solid black;
+      padding: 8px 15px;
+      border-radius: 15px;
+      font-size: 16px;
+      font-weight: bold;
+      text-align: center;
+      margin-left: 5px;
+      margin-top: 15px;
+      max-width: 550px;
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .speech-bubble::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: -12px;
+      transform: translateY(-50%);
+      border-width: 8px;
+      border-style: solid;
+      border-color: transparent white transparent transparent;
+      filter: drop-shadow(-2px 0px 0px black);
+    }
+
+    .demo-container {
+      position: absolute;
+      bottom: 145px;
+      left: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 80px;
+      height: 100px;
+      background-color: white;
+      border-radius: 10px;
+      z-index: 1001;
+    }
+
+    .demo-area {
+      font-size: 40px;
+      font-weight: bold;
+    }
+
+    .demo-romaji {
+      font-size: 20px;
+      color: gray;
+      margin-top: 5px;
+    }
+
+    .fixed-image {
+      width: 120px;
+      height: auto;
+      transform: scaleX(-1);
+    }
+
+    .rankDisplay {
+      font-size: 32px;
+      font-weight: bold;
+      text-align: center;
+      padding: 10px;
+      border-radius: 10px;
+      display: inline-block;
+      width: 400px;
+      margin-top: 30px;
+      margin-bottom: 30px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .rank-1 {
+      background: linear-gradient(135deg, #ff6b6b, #ffb74d, #ffeb3b, #81c784, #64b5f6, #9575cd, #f48fb1);
+      color: white;
+      border: 5px solid #b39ddb;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .rank-2 {
+      background: linear-gradient(135deg, #c79100, #ffb300, #ffd740, #ffb300, #c79100);
+      color: white;
+      border: 5px solid #ffe082;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+    }
+
+    .rank-3 {
+      background: linear-gradient(135deg, #757575, #bdbdbd, #e0e0e0, #bdbdbd, #757575);
+      color: white;
+      border: 5px solid #b0bec5;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+    }
+
+    .rank-4 {
+      background: linear-gradient(135deg, #8b4513, #d2691e, #a0522d, #d2691e, #8b4513);
+      color: white;
+      border: 5px solid #bc8f8f;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+    }
+
+    .rank-5 {
+      background: linear-gradient(135deg, #1565c0, #42a5f5, #90caf9, #42a5f5, #1565c0);
+      color: white;
+      border: 5px solid #64b5f6;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+    }
+
+    .seisekiimagecontainer {
+      position: absolute;
+      bottom: 15px;
+      right: 105px;
+      transform: none;
+      display: none;
+      flex-direction: row;
+      align-items: center;
+      z-index: 10;
+      width: 480px;
+    }
+
+    .seiseki-image {
+      width: 100px;
+      height: auto;
+    }
+
+    .seiseki-bubble {
+      position: relative;
+      background: #ffffff;
+      border: 2px solid black;
+      padding: 8px 15px;
+      border-radius: 15px;
+      font-size: 16px;
+      font-weight: bold;
+      text-align: center;
+      margin-right: 5px;
+      margin-top: 15px;
+      max-width: 600px;
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .seiseki-bubble::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      right: -12px;
+      transform: translateY(-50%);
+      border-width: 8px;
+      border-style: solid;
+      border-color: transparent transparent transparent white;
+      filter: drop-shadow(2px 0px 0px black);
+    }
     </style>
 </head>
 <body>
-    <img id="topimage" src="top.png" alt="トップ画像">
-    <p id="select">どのがくねんにちょうせんする？</p>
-    <div id="gradeButtons">
-        <button class="gradeButton" data-grade="1">１ねんせい</button>
-        <button class="gradeButton" data-grade="2">２年生</button>
-        <button class="gradeButton" data-grade="3">３年生</button>
-        <button class="gradeButton" data-grade="4">４年生</button>
-        <button class="gradeButton" data-grade="5">５年生</button>
-        <button class="gradeButton" data-grade="6">６年生</button>
-    </div>
-    <p id="startMessage" style="display: none; font-size: 18px; margin-top: 30px;">じゅんびはいいかな？<BR>エンターキーまたはスペースキーではじめるよ</p>
-    <img id="startimage" src="taikensmile.png" alt="待機中">
-    <div id="wordContainer">
-        <div id="kanjiDisplay"></div>
-        <div id="hiraganaDisplay"></div>
-    </div>
-    <div id="scoreDisplay">
-        <p>終了！</p>
-    </div>
-    <div id="seisekiDisplay">
-        <p class="seisekiTitle">せいせきはっぴょう</p>
-        <p id="seisekiContent"></p>
-        <div id="nankyu"></div>
-    </div>
-    <p class="romaji" id="romajiDisplay"></p>
-    <div id="keyboard" class="keyboard">
+  <p id="select">どのがくねんの　もんだいに　ちょうせんする？</p>
+  <div id="waittime">よみこみちゅう…⌛ちょっとまってね</div>
+  <div id="gradeButtons">
+    <button class="gradeButton" data-grade="1">１ねんせい</button>
+    <button class="gradeButton" data-grade="2">２年生</button>
+    <button class="gradeButton" data-grade="3">３年生</button>
+    <button class="gradeButton" data-grade="4">４年生</button>
+    <button class="gradeButton" data-grade="5">５年生</button>
+    <button class="gradeButton" data-grade="6">６年生</button>
+  </div>
+  <p id="startMessage" style="display: none; font-size: 18px; margin-top: 30px;">じゅんびはいいかな？<BR>エンターキーではじめるよ</p>
+  <img id="startimage" src="key.png" alt="待機中">
+  <div id="wordContainer">
+    <div id="kanjiDisplay"></div>
+    <div id="hiraganaDisplay"></div>
+  </div>
+  <div id="scoreDisplay">
+    <p>しゅうりょう！</p>
+  </div>
+  <div id="seisekiDisplay">
+    <p class="seisekiTitle">せいせきはっぴょう</p>
+    <p id="seisekiContent"></p>
+    <div id="nankyu"></div>
+  </div>
+  <p class="romaji" id="romajiDisplay"></p>
+  <div id="keyboard" class="keyboard">
     <div class="row">
-        <div class="key" id="key1">1</div>
-        <div class="key" id="key2">2</div>
-        <div class="key" id="key3">3</div>
-        <div class="key" id="key4">4</div>
-        <div class="key" id="key5">5</div>
-        <div class="key" id="key6">6</div>
-        <div class="key" id="key7">7</div>
-        <div class="key" id="key8">8</div>
-        <div class="key" id="key9">9</div>
-        <div class="key" id="key0">0</div>
-        <div class="key" id="key-">-</div>
-    </div>
-    <div class="row">
-        <div class="key" id="keyQ">Q</div>
-        <div class="key" id="keyW">W</div>
-        <div class="key" id="keyE">E</div>
-        <div class="key" id="keyR">R</div>
-        <div class="key" id="keyT">T</div>
-        <div class="key" id="keyY">Y</div>
-        <div class="key" id="keyU">U</div>
-        <div class="key" id="keyI">I</div>
-        <div class="key" id="keyO">O</div>
-        <div class="key" id="keyP">P</div>
-        <div class="key" id="key@">@</div>
+      <div class="key" id="key1">1</div>
+      <div class="key" id="key2">2</div>
+      <div class="key" id="key3">3</div>
+      <div class="key" id="key4">4</div>
+      <div class="key" id="key5">5</div>
+      <div class="key" id="key6">6</div>
+      <div class="key" id="key7">7</div>
+      <div class="key" id="key8">8</div>
+      <div class="key" id="key9">9</div>
+      <div class="key" id="key0">0</div>
+      <div class="key" id="key-">-</div>
     </div>
     <div class="row">
-        <div class="key home" id="keyA">A</div>
-        <div class="key home" id="keyS">S</div>
-        <div class="key home" id="keyD">D</div>
-        <div class="key home" id="keyF">F</div>
-        <div class="key" id="keyG">G</div>
-        <div class="key" id="keyH">H</div>
-        <div class="key home" id="keyJ">J</div>
-        <div class="key home" id="keyK">K</div>
-        <div class="key home" id="keyL">L</div>
-        <div class="key home" id="keySemicolon">;</div>
-        <div class="key" id="keycolon">:</div>
+      <div class="key" id="keyQ">Q</div>
+      <div class="key" id="keyW">W</div>
+      <div class="key" id="keyE">E</div>
+      <div class="key" id="keyR">R</div>
+      <div class="key" id="keyT">T</div>
+      <div class="key" id="keyY">Y</div>
+      <div class="key" id="keyU">U</div>
+      <div class="key" id="keyI">I</div>
+      <div class="key" id="keyO">O</div>
+      <div class="key" id="keyP">P</div>
+      <div class="key" id="key@">@</div>
     </div>
-        <div class="row">
-        <div class="key" id="keyZ">Z</div>
-        <div class="key" id="keyX">X</div>
-        <div class="key" id="keyC">C</div>
-        <div class="key" id="keyV">V</div>
-        <div class="key" id="keyB">B</div>
-        <div class="key" id="keyN">N</div>
-        <div class="key" id="keyM">M</div>
-        <div class="key" id="key,">,</div>
-        <div class="key" id="key.">.</div>
-        <div class="key" id="key/">/</div>
-        <div class="key" id="key\">\</div>
+    <div class="row">
+      <div class="key home" id="keyA">A</div>
+      <div class="key home" id="keyS">S</div>
+      <div class="key home" id="keyD">D</div>
+      <div class="key home" id="keyF">F</div>
+      <div class="key" id="keyG">G</div>
+      <div class="key" id="keyH">H</div>
+      <div class="key home" id="keyJ">J</div>
+      <div class="key home" id="keyK">K</div>
+      <div class="key home" id="keyL">L</div>
+      <div class="key home" id="keySemicolon">;</div>
+      <div class="key" id="keycolon">:</div>
     </div>
+    <div class="row">
+      <div class="key" id="keyZ">Z</div>
+      <div class="key" id="keyX">X</div>
+      <div class="key" id="keyC">C</div>
+      <div class="key" id="keyV">V</div>
+      <div class="key" id="keyB">B</div>
+      <div class="key" id="keyN">N</div>
+      <div class="key" id="keyM">M</div>
+      <div class="key" id="key,">,</div>
+      <div class="key" id="key.">.</div>
+      <div class="key" id="key/">/</div>
+      <div class="key" id="key\">\</div>
     </div>
-<div id="handsContainer">
-<svg id="hands" viewBox="0 0 390 60" width="390" height="60">
-    <!-- 左手 -->
-<g id="leftHand" transform="translate(50, -10)">
-    <rect class="finger" id="finger-L5" x="-20" y="50" width="22" height="30" rx="10" ry="10" stroke="black" stroke-width="2"/>
-    <rect class="finger" id="finger-L4" x="10" y="35" width="22" height="45" rx="10" ry="10" stroke="black" stroke-width="2"/>
-    <rect class="finger" id="finger-L3" x="40" y="25" width="22" height="55" rx="10" ry="10" stroke="black" stroke-width="2"/>
-    <rect class="finger" id="finger-L2" x="70" y="45" width="22" height="35" rx="10" ry="10" stroke="black" stroke-width="2"/>
-    <rect class="finger" id="finger-L1" x="100" y="63" width="22" height="20" rx="10" ry="10" stroke="black" stroke-width="2"/>
-</g>
+  </div>
+  <div id="handsContainer">
+    <svg id="hands" viewBox="0 0 450 60" width="450" height="65">
+      <!-- 左手 -->
+      <g id="leftHand" transform="translate(82, -10)">
+        <rect class="finger" id="finger-L5" x="-20" y="50" width="27" height="35" rx="13" ry="13" stroke="black" stroke-width="2"/>
+        <rect class="finger" id="finger-L4" x="16" y="35" width="27" height="50" rx="13" ry="13" stroke="black" stroke-width="2"/>
+        <rect class="finger" id="finger-L3" x="52" y="25" width="27" height="60" rx="13" ry="13" stroke="black" stroke-width="2"/>
+        <rect class="finger" id="finger-L2" x="89" y="45" width="27" height="40" rx="13" ry="13" stroke="black" stroke-width="2"/>
+        <rect class="finger" id="finger-L1" x="124" y="63" width="27" height="25" rx="13" ry="13" stroke="black" stroke-width="2"/>
+      </g>
 
-<g id="rightHand" transform="translate(330, -10) scale(-1, 1)">
-    <rect class="finger" id="finger-R5" x="-20" y="50" width="22" height="30" rx="10" ry="10" stroke="black" stroke-width="2"/>
-    <rect class="finger" id="finger-R4" x="10" y="35" width="22" height="45" rx="10" ry="10" stroke="black" stroke-width="2"/>
-    <rect class="finger" id="finger-R3" x="40" y="25" width="22" height="55" rx="10" ry="10" stroke="black" stroke-width="2"/>
-    <rect class="finger" id="finger-R2" x="70" y="45" width="22" height="35" rx="10" ry="10" stroke="black" stroke-width="2"/>
-    <rect class="finger" id="finger-R1" x="100" y="63" width="22" height="20" rx="10" ry="10" stroke="black" stroke-width="2"/>
-</g>
+      <g id="rightHand" transform="translate(415, -10) scale(-1, 1)">
+        <rect class="finger" id="finger-R5" x="-20" y="50" width="27" height="35" rx="13" ry="13" stroke="black" stroke-width="2"/>
+        <rect class="finger" id="finger-R4" x="16" y="35" width="27" height="50" rx="13" ry="13" stroke="black" stroke-width="2"/>
+        <rect class="finger" id="finger-R3" x="52" y="25" width="27" height="60" rx="13" ry="13" stroke="black" stroke-width="2"/>
+        <rect class="finger" id="finger-R2" x="89" y="45" width="27" height="40" rx="13" ry="13" stroke="black" stroke-width="2"/>
+        <rect class="finger" id="finger-R1" x="124" y="63" width="27" height="25" rx="13" ry="13" stroke="black" stroke-width="2"/>
+      </g>
 
-</svg>
+    </svg>
 
-</div>
-    <div id="gradeDisplay"></div>
-    <div id="resetButton">さいしょにもどる</div>
-    <p id="result"></p>
+  </div>
+  <div id="gradeDisplay"></div>
+  <div id="modeDisplay"></div>
+  <div id="resetButton">さいしょにもどる</div>
+  <p id="result"></p>
+
+  <div class="fixed-image-container" id="fixedimage">
+    <div class="demo-container">
+      <div class="demo-area"></div>
+      <div class="demo-romaji"></div>
+    </div>
+    <img src="taiken1.png" class="fixed-image">
+    <div class="speech-bubble">つかうゆびと　キーがひかるよ　がめんをみながらタイピングしてみよう</div>
+  </div>
+  <div class="seisekiimagecontainer" id="seisekiimage">
+    <div class="seiseki-bubble"></div>
+    <img src="taiken2.png" class="seiseki-image">
+  </div>
 
 
     <script>
-        let questions = []; // 問題リスト
-        let remainingQuestions = []; // **ランダム出題用（ここから削除する）**
-        let currentQuestion = {}; // 現在の問題
-        let currentIndex = 0;
-        let questionCount = 0; // 出題カウント
-        let currentAnswerList = []; // 現在の回答リスト（複数の正解パターン）
-        const maxQuestions = 8; // 出題する問題数
-        let currentDisplayedRomaji = ""; // **現在表示しているローマ字を保持する変数**
-        let totalKeysPressed = 0;  // 押されたキーの総数（正解＋ミス）
-        let correctKeysPressed = 0; // 正しく打ったキーの数
-        let mistakeCount = 0;  // ミスしたキーの数
-        let startTime = 0;  // ゲーム開始時間（UNIXタイムスタンプ）
-        let endTime = 0;  // ゲーム終了時間
-        let selectedGrade = 1; // デフォルトで1年生に設定
-        let previousWordEndedWithN = 0; // 0: 「n」で終わっていない, 1: 「n」で終わっている
+  let questions = []; //問題リスト
+  let remainingQuestions = []; //ランダム出題用
+  let currentQuestion = {}; //現在の問題
+  let currentIndex = 0;
+  let questionCount = 0; //出題カウント
+  let currentAnswerList = []; //現在の回答リスト
+  const maxQuestions = 6; //出題する問題数
+  let currentDisplayedRomaji = ""; //現在表示しているローマ字を保持
+  let totalKeysPressed = 0;  //押されたキーの総数
+  let correctKeysPressed = 0; //正しく打ったキーの数
+  let mistakeCount = 0;  //ミスしたキーの数
+  let startTime = 0;  //ゲーム開始時間
+  let endTime = 0;  //ゲーム終了時間
+  let selectedGrade = 1; //デフォルトで1年生
+  let previousWordEndedWithN = 0; //n特殊処理用
+  let previousWordEndedWithN2 = 0; //n特殊処理用
         
         // ひらがな → ローマ字変換表
         // 基本の「ひらがな → ローマ字」マッピング
