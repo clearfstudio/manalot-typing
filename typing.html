@@ -654,21 +654,113 @@
             "0": "R5", "P": "R5", ";": "R5", "/": "R5", "-": "R5", "@": "R5"
         };
 
-        function setGrade(grade) {
-            selectedGrade = grade; // 選択された学年を格納
-            loadQuestions(); // JSONをロード
+          // スタート画面のデモ部分
+          const demoChars = ["あ", "い", "う", "え", "お"];
+          let demoIndex = 0;
+          let demoInterval;
+          let demoArea;
+          let demoRomaji;
+
+function startTypingDemo() {
+    demoIndex = 0;
+    demoInterval = setInterval(() => {
+        stopTypingDemo();
+
+        const currentChar = demoChars[demoIndex];
+        const romajiList = hiraToRoma[currentChar];
+        const romaji = romajiList ? romajiList[0] : "";
+
+        demoArea.textContent = currentChar;
+        demoRomaji.textContent = romaji.toUpperCase();
+
+        if (romaji) {
+            const keyElement = document.getElementById(`key${romaji.toUpperCase()}`);
+            const fingerId = keyToFinger[romaji.toUpperCase()];
+            const fingerElement = document.getElementById(`finger-${fingerId}`);
+
+            if (keyElement) keyElement.classList.add("active");
+            if (fingerElement) fingerElement.classList.add("active");
         }
 
-        async function loadQuestions() {
-            const fileName = `questions_${selectedGrade}.json`; // 学年に応じたファイル名
-            try {
-                const response = await fetch(fileName);
-                questions = await response.json();
-                console.log(`JSONデータの読み込み完了 (${fileName}):`, questions);
-            } catch (error) {
-                console.error("JSONの読み込みに失敗しました:", error);
-            }
+        demoIndex = (demoIndex + 1) % demoChars.length;
+    }, 2000);
+  }
+
+//デモを停止
+  function stopTypingDemo() {
+    document.querySelectorAll(".key.active").forEach(el => el.classList.remove("active"));
+    document.querySelectorAll(".finger.active").forEach(el => el.classList.remove("active"));
+    demoArea.textContent = "";
+    demoRomaji.textContent = "";
+  }
+    document.addEventListener("DOMContentLoaded", async function () {
+    demoArea = document.querySelector(".demo-area");
+    demoRomaji = document.querySelector(".demo-romaji");
+    const gradeButtons = document.querySelectorAll(".gradeButton");
+
+    if (!demoArea || !demoRomaji) return;
+
+    await loadAllQuestions();
+
+    // ✅ ボタン押下で学年を選択してゲームへ
+    gradeButtons.forEach(button => {
+      button.addEventListener("click", function () {
+        selectedGrade = `問題${this.getAttribute("data-grade")}年生`;
+
+        clearInterval(demoInterval);
+        stopTypingDemo();
+
+        if (questionsData[selectedGrade]) {
+          questions = [...questionsData[selectedGrade]];
+          remainingQuestions = [...questions];
+        } else {
+          console.error("エラー: 学年の問題データが見つかりません！");
+          return;
         }
+
+        document.getElementById("gradeButtons").style.display = "none";
+        document.getElementById("select").style.display = "none";
+        document.getElementById("keyboard").style.display = "none";
+        document.getElementById("fixedimage").style.display = "none";
+        document.getElementById("handsContainer").style.display = "none";
+        document.getElementById("startimage").style.display = "block";
+        document.getElementById("startMessage").style.display = "block";
+
+        document.addEventListener("keydown", startOnKeyPress);
+      });
+    });
+
+    startTypingDemo(); // デモ開始
+  });
+
+// ✅ 複数JSONファイルを読み込み questionsData にまとめる
+  async function loadAllQuestions() {
+    const grades = [1, 2, 3, 4, 5, 6];
+    for (const grade of grades) {
+      const fileName = `questions_${grade}.json`;
+      try {
+        const response = await fetch(fileName);
+        const data = await response.json();
+        questionsData[`問題${grade}年生`] = data;
+      } catch (error) {
+        console.error(`${fileName} の読み込みに失敗:`, error);
+      }
+    }
+
+    // 読み込み完了後に表示切り替え
+    document.getElementById("waittime").style.display = "none";
+    document.getElementById("gradeButtons").style.display = "grid";
+  }
+
+function startOnKeyPress(event) {
+      if (event.key === "Enter") {
+        document.getElementById("startimage").style.display = "none";
+        document.getElementById("startMessage").style.display = "none";
+        document.removeEventListener("keydown", startOnKeyPress);
+        startGame();
+      }
+    }
+
 function calculateScore() {
 
     
